@@ -1,4 +1,4 @@
-import time, msgpack, multiprocessing, socket, config
+import time, msgpack, multiprocessing, socket, config, csv
 
 class Monitor(multiprocessing.Process):
 
@@ -18,5 +18,8 @@ class Monitor(multiprocessing.Process):
         while True:
             binary_data, addr = self.sock.recvfrom(config.chunk_size)
             if binary_data:
-                d = msgpack.unpackb(binary_data)
-                self.q.put(self.parsed(d), True)
+                with open(config.csv_file, 'a') as csv_file:
+                    writer = csv.writer(csv_file)
+                    d = self.parsed(msgpack.unpackb(binary_data))
+                    self.q.put(d, True)
+                    writer.writerow([d['Timestamp'], d['Measurement']])

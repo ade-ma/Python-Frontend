@@ -1,19 +1,24 @@
 import socket, os, os.path, time
 import random, msgpack, config, sys
+from time import gmtime, strftime
 
 # construct example data
-def sample_message(msg_length):
-    return msgpack.packb([random.random() for i in range(msg_length)])
+def sample_message():
+    type = random.choice(["temperature", "relativeHumidity"])
+    timestamp = strftime("%m/%d/%Y %H:%M:%S", gmtime())
+    lower = random.random()
+    uid = random.randint(0, 1024)
+    measurement = random.random()
+    return msgpack.packb([type, timestamp, lower, uid, measurement])
 
 # setup socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 addr = (socket.gethostname(), config.socket_port)
 
-size = len(config.schema)
 while True:# send binary message
     try:
-        sock.sendto(sample_message(size), addr)
+        sock.sendto(sample_message(), addr)
         time.sleep(1)
     except KeyboardInterrupt:
         # close connection

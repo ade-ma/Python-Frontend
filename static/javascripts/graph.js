@@ -3,21 +3,15 @@ d3.csv("/static/csvs/data.csv", function(error, data){
   console.log(data)
   var csv_data = [
     {
-      key: "Temperature",
+      key: "Measurement",
       values: [],
       'color': '#79C36A'
     },
-    {
-      key: "Humidity",
-      values: [],
-      'color': '#599AD3'
-    }
   ];
 
   data.slice(0, 1600).forEach(function (d){
     console.log(d);
-    csv_data[0].values.push({x: Date.parse(d.Timestamp), y: d.Temperature});
-    csv_data[1].values.push({x: Date.parse(d.Timestamp), y: d.Humidity});
+    csv_data[0].values.push({x: Date.parse(d.Timestamp), y: d.Measurement});
   })       
 
   var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
