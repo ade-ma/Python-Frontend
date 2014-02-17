@@ -10,6 +10,7 @@ import time, os.path
 import multiprocessing
 import monitor
 import config
+import json
  
 clients = []
  
@@ -21,7 +22,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print 'New connection'
         clients.append(self)
- 
+
+    def on_message(self, message):
+        print message
+        
     def on_close(self):
         print 'Connection closed'
         clients.remove(self)
@@ -53,7 +57,7 @@ def main():
             result = result_queue.get()
             print "Reading: " + str(result)
             for c in clients:
-                c.write_message(result)
+                c.write_message(json.dumps(result))
  
     event_loop = tornado.ioloop.IOLoop.instance()
     scheduler = tornado.ioloop.PeriodicCallback(poll_monitor, 10, io_loop = event_loop)
