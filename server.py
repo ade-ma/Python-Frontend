@@ -4,8 +4,9 @@ from time import gmtime, strftime
 
 # construct example data
 def sample_message():
-    type = random.choice(["temperature", "relativeHumidity"])
-    timestamp = strftime("%m/%d/%Y %H:%M:%S", gmtime())
+    type = random.choice(["Temperature", "RelativeHumidity"])
+    current_time = gmtime()
+    timestamp = strftime("%m/%d/%Y %H:%M:%S", current_time)
     lower = random.random()
     uid = random.randint(0, 1024)
     measurement = random.random()

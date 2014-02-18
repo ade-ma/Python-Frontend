@@ -1,5 +1,5 @@
 import os
-csv_file = 'static/csvs/data.csv'
+csv_root = 'static/csvs/'
 dirname = os.path.dirname(__file__)
 static_path = os.path.join(dirname, 'static')
 db_file = "readings.db"
