@@ -9,4 +9,5 @@ queue_size = 64
 schema = ["DataType", "Timestamp", "Lower", "UID", "Measurement"]
 datatype_mapping = {0: "Temperature", 1: "RelativeHumidity"}
 server_port = 8888
+socket_addr = "127.0.0.1"
 socket_port = 9999

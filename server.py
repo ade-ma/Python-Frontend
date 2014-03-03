@@ -14,7 +14,7 @@ def sample_message():
 # setup socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-addr = (socket.gethostname(), config.socket_port)
+addr = (config.socket_addr, config.socket_port)
 
 while True:# send binary message
     try:

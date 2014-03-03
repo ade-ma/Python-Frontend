@@ -56,10 +56,8 @@ function plot() {
   };
   ws.onmessage = function (evt) {
     var data = JSON.parse(evt.data);
-    console.log(datatype_mapping, data.DataType);
     var type = datatype_mapping[data.DataType];
     var index = datatype_index[type];
-    console.log(data, index);
     csv_data[index].values.push({x: data.Timestamp, y: data.Measurement});
     d3.select('#chart svg')
               .datum(csv_data)
@@ -75,7 +73,6 @@ for (var i=0; i<initial; i++) {
     var key = csv_data[i].key;
     d3.csv("/static/csvs/" + key + ".csv", function(error, data){
       data.forEach(function (d){
-        console.log(datatype_mapping, i);
         var type = datatype_mapping[i];
         var index = datatype_index[type]
         csv_data[index].values.push({x: d.Timestamp, y: d.Measurement});

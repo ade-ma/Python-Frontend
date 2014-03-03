@@ -6,7 +6,7 @@ class Monitor(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
         self.q = q
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind((socket.gethostname(), config.socket_port))
+        self.sock.bind((config.socket_addr, config.socket_port))
 
     def close(self):
         self.sock.close()
