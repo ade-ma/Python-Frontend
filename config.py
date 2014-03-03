@@ -1,5 +1,6 @@
 import os
 csv_root = 'static/csvs/'
+csv_header = "Timestamp,Measurement\n"
 dirname = os.path.dirname(__file__)
 static_path = os.path.join(dirname, 'static')
 db_file = "readings.db"
