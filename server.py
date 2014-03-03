@@ -9,7 +9,7 @@ def sample_message():
     lower = random.random()
     uid = random.randint(0, 1024)
     measurement = random.random()
-    return msgpack.packb([type, timestamp, lower, uid, measurement])
+    return msgpack.packb([lower, type, uid, measurement, timestamp])
 
 # setup socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
