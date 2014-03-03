@@ -19,7 +19,7 @@ class Monitor(multiprocessing.Process):
             binary_data, addr = self.sock.recvfrom(config.chunk_size)
             if binary_data:
                 d = self.parsed(msgpack.unpackb(binary_data))
-                csv_path = os.path.join(config.csv_root, d['DataType'] + ".csv")
+                csv_path = os.path.join(config.csv_root, config.datatype_mapping[d['DataType']] + ".csv")
                 with open(csv_path, 'a') as csv_file:
                     writer = csv.writer(csv_file)
                     self.q.put(d, True)
