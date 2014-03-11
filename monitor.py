@@ -1,4 +1,4 @@
-import time, msgpack, multiprocessing, socket, config, csv, os, os.path
+import time, msgpack, multiprocessing, socket, config, csv, os, os.path, db, sys
 
 class Monitor(multiprocessing.Process):
 
@@ -19,12 +19,5 @@ class Monitor(multiprocessing.Process):
             binary_data, addr = self.sock.recvfrom(config.chunk_size)
             if binary_data:
                 d = self.parsed(msgpack.unpackb(binary_data))
-                csv_path = os.path.join(config.csv_root, config.datatype_mapping[d['DataType']] + ".csv")
-                if not os.path.isfile(csv_path):
-                    f = open(csv_path, 'w')
-                    f.write(config.csv_header)
-                    f.close()
-                with open(csv_path, 'a') as csv_file:
-                    writer = csv.writer(csv_file)
-                    self.q.put(d, True)
-                    writer.writerow([d['Timestamp'], d['Measurement']])
+                db.add(d).callback(True)
+                self.q.put(d, True)

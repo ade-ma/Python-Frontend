@@ -1,5 +1,8 @@
 #!/usr/bin/python27
  
+import tornado.platform.twisted
+tornado.platform.twisted.install()
+
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -11,12 +14,27 @@ import multiprocessing
 import monitor
 import config
 import json
- 
+import db
+
 clients = []
- 
+db.setup()
+
 class ViewHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('views/index.html')
+
+class DataHandler(tornado.web.RequestHandler):
+
+    @tornado.web.asynchronous
+    def get(self, datatype):
+        print datatype
+        data = db.last(datatype, 50)
+        data.addCallback(self.on_response)
+
+    def on_response(self, data):
+        self.write(json.dumps(data))
+        self.finish()
+        
  
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -45,6 +63,7 @@ def main():
         handlers=[
             (r"/", ViewHandler),
             (r"/ws", WebSocketHandler),
+            (r"/data/(\w+)", DataHandler)
         ], static_path = config.static_path
     )
 
@@ -53,16 +72,19 @@ def main():
     print "Listening on port:", config.server_port
  
     def poll_monitor():
-        if not result_queue.empty():
-            result = result_queue.get()
-            print "Reading: " + str(result)
-            for c in clients:
-                c.write_message(json.dumps(result))
+        try:
+            if not result_queue.empty():
+                result = result_queue.get()
+                print "Reading: " + str(result)
+                for c in clients:
+                    c.write_message(json.dumps(result))
+        except KeyboardInterrupt:
+            tornado.ioloop.IOLoop.instance().stop()
  
     event_loop = tornado.ioloop.IOLoop.instance()
     scheduler = tornado.ioloop.PeriodicCallback(poll_monitor, 10, io_loop = event_loop)
     scheduler.start()
-    event_loop.start()
+    event_loop.current().start()
  
 if __name__ == "__main__":
     main()

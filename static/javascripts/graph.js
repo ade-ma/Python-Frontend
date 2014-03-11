@@ -11,10 +11,7 @@ var csv_data = [
   },
 ];
 
-var datatype_mapping = {
-  0: "Temperature",
-  1: "RelativeHumidity"
-}
+datatype_mapping = ["Temperature", "RelativeHumidity"]
 
 var datatype_index = {}
 
@@ -30,8 +27,6 @@ function plot() {
 
   nv.addGraph(function() {
     chart = nv.models.lineChart();
-
-    chart.title
    
     chart.xAxis
         .tickFormat(function(d) { return d3.time.format('%X')(new Date(d)); });
@@ -58,10 +53,10 @@ function plot() {
     var data = JSON.parse(evt.data);
     var type = datatype_mapping[data.DataType];
     var index = datatype_index[type];
-    csv_data[index].values.push({x: data.Timestamp, y: data.Measurement});
+    csv_data[index].values.unshift({x: data.Timestamp, y: data.Measurement});
     d3.select('#chart svg')
               .datum(csv_data)
-              .transition().duration(500)
+              .transition().duration(0)
               .call(chart);
   };
 }
@@ -71,11 +66,13 @@ function plot() {
 for (var i=0; i<initial; i++) {
   (function(i) {
     var key = csv_data[i].key;
-    d3.csv("/static/csvs/" + key + ".csv", function(error, data){
-      data.forEach(function (d){
+    $.get("/data/" + key, function(data){
+      data = JSON.parse(data);
+      console.log(data);
+      data.forEach(function (tuple){
         var type = datatype_mapping[i];
         var index = datatype_index[type]
-        csv_data[index].values.push({x: d.Timestamp, y: d.Measurement});
+        csv_data[index].values.push({x: tuple[0], y: tuple[1]});
       })    
 
       remaining--;
