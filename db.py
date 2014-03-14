@@ -9,12 +9,12 @@ def setup():
         create_table(datatype)
 
 def create_table(datatype):
-    cmd = "CREATE TABLE IF NOT EXISTS %s (Timestamp double precision, Measurement double precision)" % datatype
+    cmd = "CREATE TABLE IF NOT EXISTS %s (UID int, Timestamp double precision, Measurement double precision)" % datatype
     return pool.runQuery(cmd)
 
 def add(d):   
     datatype = config.datatype_mapping[d['DataType']]
-    cmd = "INSERT INTO %s VALUES (%f, %f)" % (datatype, d['Timestamp'], d['Measurement'])
+    cmd = "INSERT INTO %s VALUES (%i, %f, %f)" % (datatype, d['UID'], d['Timestamp'], d['Measurement'])
     return pool.runQuery(cmd)
 
 def all(datatype):
