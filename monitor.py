@@ -1,4 +1,7 @@
+#!/usr/bin/env python -B
+
 import time, msgpack, multiprocessing, socket, config, csv, os, os.path, db, sys
+import pprint
 
 class Monitor(multiprocessing.Process):
 

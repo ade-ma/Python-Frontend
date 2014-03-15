@@ -1,3 +1,5 @@
+#!/usr/bin/env python -B
+
 import os
 csv_root = 'static/csvs/'
 csv_header = "Timestamp,Measurement\n"

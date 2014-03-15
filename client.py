@@ -13,6 +13,8 @@ import time, os.path
 import multiprocessing
 import monitor
 import config
+#!/usr/bin/env python -B
+
 import json
 import db
 
@@ -27,7 +29,6 @@ class DataHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, datatype):
-        print datatype
         data = db.last(datatype, 50)
         data.addCallback(self.on_response)
 
@@ -75,7 +76,6 @@ def main():
         try:
             if not result_queue.empty():
                 result = result_queue.get()
-                print "Reading: " + str(result)
                 for c in clients:
                     c.write_message(json.dumps(result))
         except KeyboardInterrupt:

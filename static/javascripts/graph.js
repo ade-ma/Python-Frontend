@@ -1,4 +1,4 @@
-var csv_data = [
+var raw_data = [
   {
     key: "Temperature",
     values: [],
@@ -15,11 +15,11 @@ datatype_mapping = ["Temperature", "RelativeHumidity"]
 
 var datatype_index = {}
 
-var initial = csv_data.length;
+var initial = raw_data.length;
 var remaining = initial;
 
 for (var i=0; i<remaining; i++) {
-  datatype_index[csv_data[i].key] = i;
+  datatype_index[raw_data[i].key] = i;
 }
 
 function plot() {
@@ -35,7 +35,7 @@ function plot() {
         .tickFormat(d3.format(',.2f'));
    
     d3.select('#chart svg')
-        .datum(csv_data)
+        .datum(raw_data)
       .transition().duration(500)
         .call(chart);
    
@@ -53,9 +53,9 @@ function plot() {
     var data = JSON.parse(evt.data);
     var type = datatype_mapping[data.DataType];
     var index = datatype_index[type];
-    csv_data[index].values.unshift({x: data.Timestamp, y: data.Measurement});
+    raw_data[index].values.unshift({x: data.Timestamp, y: data.Measurement});
     d3.select('#chart svg')
-              .datum(csv_data)
+              .datum(raw_data)
               .transition().duration(0)
               .call(chart);
   };
@@ -65,14 +65,14 @@ function plot() {
 // load csvs in parallel
 for (var i=0; i<initial; i++) {
   (function(i) {
-    var key = csv_data[i].key;
+    var key = raw_data[i].key;
     $.get("/data/" + key, function(data){
       data = JSON.parse(data);
       console.log(data);
       data.forEach(function (tuple){
         var type = datatype_mapping[i];
         var index = datatype_index[type]
-        csv_data[index].values.push({x: tuple[0], y: tuple[1]});
+        raw_data[index].values.push({x: tuple[1], y: tuple[2]});
       })    
 
       remaining--;

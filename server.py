@@ -1,3 +1,5 @@
+#!/usr/bin/env python -B
+
 import socket, os, os.path, time
 import random, msgpack, config, sys
 import time

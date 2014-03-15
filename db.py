@@ -1,3 +1,5 @@
+#!/usr/bin/env python -B
+
 import sqlite3, config, time
 from twisted.enterprise import adbapi 
 
